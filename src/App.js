@@ -1,7 +1,11 @@
 import React from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, FormControl } from "@material-ui/core"
+import {
+  TextField, Button, Select, MenuItem, InputLabel,
+  FormControl, Divider, Tooltip
+} from "@material-ui/core"
 import { useStyles } from "./index_style"
 import { gapi } from 'gapi-script'
+import logo from "./ressources/icone_yt.png"
 
 
 const YoutubeViewer = () => {
@@ -34,7 +38,7 @@ const YoutubeViewer = () => {
   const handleChangeType = (event) => {
     setType(event.target.value)
   };
-  const [query, setQuery] = React.useState("")
+  const [query, setQuery] = React.useState("akram")
   const handleChangeQuery = (event) => {
     setQuery(event.target.value)
   }
@@ -46,7 +50,7 @@ const YoutubeViewer = () => {
   const handleChangePublishedAfter = (event) => {
     setPublishedAfter(event.target.value)
   }
-  const [maxResults, setMaxResults] = React.useState(20)
+  const [maxResults, setMaxResults] = React.useState(30)
   const handleChangeMaxResults = (event) => {
     setMaxResults(event.target.value)
   }
@@ -54,13 +58,12 @@ const YoutubeViewer = () => {
 
 
   const parameters = {
-    "part": "snippet",                      // snippet, id, contentDetails, statistics, status, topicDetails
-    "order": order,                         // date, rating, viewCount, relevance, title, videoCount
-    "q": query,                             // query
-    "type": type,                           // video, playlist, channel
-    "videoDefinition": videoDefinition,     // any, high, standard
-    "videoDuration": videoDuration,         // any, long, medium, short
-    "videoType": videoType,                 // any, episode, movie
+    "part": "snippet",
+    "order": order,
+    "type": type,
+    "videoDefinition": videoDefinition,
+    "videoDuration": videoDuration,
+    "videoType": videoType,
     "maxResults": maxResults,
     "regionCode": "FR",
     "safeSearch": "none",
@@ -69,6 +72,13 @@ const YoutubeViewer = () => {
     // "publishedBefore": publishedBefore,
     // "publishedAfter": publishedAfter
   }
+
+  const orders = ["date", "rating", "viewCount", "relevance", "title", "videoCount"]
+  const types = ["video", "playlist", "channel"]
+  const videoDefinitions = ["any", "high", "standard"]
+  const videoDurations = ["any", "long", "medium", "short"]
+  const videoTypes = ["any", "episode", "movie"]
+
 
   const buildQueryParam = (parameters) => {
     const keys = Object.keys(parameters)
@@ -139,21 +149,16 @@ const YoutubeViewer = () => {
     authenticate().then(loadClient)
   }
 
-
   return (
     <div className={classes.root}>
-      <h1>Recherche Youtube</h1>
+      <img scr={logo} alt="youtube" />
+      <h1 className={classes.mainTitle}>Recherche Youtube</h1>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField label="part" disabled value={"snippet"} className={classes.textField} InputLabelProps={{ classes: { root: classes.labelTextfield } }} />
         <FormControl className={classes.formControl}>
           <InputLabel>order</InputLabel>
           <Select value={order} onChange={handleChangeOrder} className={classes.select}>
-            <MenuItem value={"date"}>date</MenuItem>
-            <MenuItem value={"rating"}>rating</MenuItem>
-            <MenuItem value={"viewCount"}>viewCount</MenuItem>
-            <MenuItem value={"relevance"}>relevance</MenuItem>
-            <MenuItem value={"title"}>title</MenuItem>
-            <MenuItem value={"videoCount"}>videoCount</MenuItem>
+            {orders.map(order => <MenuItem value={order}>{order}</MenuItem>)}
           </Select>
         </FormControl>
         <TextField required label="query" placeholder="string" value={query} onChange={handleChangeQuery} className={classes.textField} InputLabelProps={{ classes: { root: classes.labelTextfield } }} />
@@ -167,51 +172,55 @@ const YoutubeViewer = () => {
         <FormControl className={classes.formControl}>
           <InputLabel>type</InputLabel>
           <Select value={type} onChange={handleChangeType} className={classes.select}>
-            <MenuItem value={"video"}>video</MenuItem>
-            <MenuItem value={"playlist"}>playlist</MenuItem>
-            <MenuItem value={"channel"}>channel</MenuItem>
+            {types.map(type => <MenuItem value={type}>{type}</MenuItem>)}
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
           <InputLabel>videoDefinition</InputLabel>
           <Select value={videoDefinition} onChange={handleChangeVideoDefinition} className={classes.select}>
-            <MenuItem value={"any"}>any</MenuItem>
-            <MenuItem value={"high"}>high</MenuItem>
-            <MenuItem value={"standard"}>standard</MenuItem>
+            {videoDefinitions.map(videoDefinition => <MenuItem value={videoDefinition}>{videoDefinition}</MenuItem>)}
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
           <InputLabel>videoType</InputLabel>
           <Select value={videoType} onChange={handleChangeVideoType} className={classes.select}>
-            <MenuItem value={"any"}>any</MenuItem>
-            <MenuItem value={"episode"}>episode</MenuItem>
-            <MenuItem value={"movie"}>movie</MenuItem>
+            {videoTypes.map(videoType => <MenuItem value={videoType}>{videoType}</MenuItem>)}
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
           <InputLabel>videoDuration</InputLabel>
           <Select value={videoDuration} onChange={handleChangeVideoDuration} className={classes.select}>
-            <MenuItem value={"any"}>any</MenuItem>
-            <MenuItem value={"long"}>long</MenuItem>
-            <MenuItem value={"medium"}>medium</MenuItem>
-            <MenuItem value={"short"}>short</MenuItem>
+            {videoDurations.map(videoDuration => <MenuItem value={videoDuration}>{videoDuration}</MenuItem>)}
           </Select>
         </FormControl>
+      </form>
+      <div className={classes.buttons}>
         <Button color="secondary" variant="contained" onClick={authorizeAndLoad}>authorize and load</Button>
         <Button disabled={query.length < 2} color="primary" variant="contained" onClick={execute}>execute</Button>
-        {items && items.map(e => {
-          const url = "https://www.youtube.com/watch?v=" + e.id.videoId
-          return (
-            <div className={classes.item}>
-              <img src={e.snippet.thumbnails.default.url} alt="img" />
+      </div>
+      {items && items.map(e => {
+        const { channelId, channelTitle, description, publishedAt, thumbnails, title } = e.snippet
+        const url = "https://www.youtube.com/watch?v=" + e.id.videoId
+        const channelUrl = "https://www.youtube.com/channel/" + channelId
+        return (
+          <div className={classes.item}>
+            <div className={classes.content}>
+              <a href={url}><img src={thumbnails.default.url} alt="img" className={classes.img} /></a>
               <div>
-                <div>{e.snippet.title + " from channel: " + e.snippet.channelTitle}</div>
-                <a href={url}>{url}</a>
+                <a href={url} className={classes.title}><h3>{title}</h3></a>
+                <Tooltip title={`Go to channel ${channelTitle}`}>
+                  <a href={channelUrl} className={classes.title}>
+                    {channelTitle}
+                  </a>
+                </Tooltip>
+                {publishedAt}
+                <div>{description}</div>
               </div>
             </div>
-          )
-        })}
-      </form>
+            <Divider className={classes.divider} />
+          </div>
+        )
+      })}
     </div>
   );
 }
