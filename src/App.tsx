@@ -12,48 +12,50 @@ const YoutubeViewer = () => {
 
   const classes = useStyles()
 
-  const client_id = "YOUR_CLIENT_ID"
-  const APIKey = "API_key"
+  // const client_id = "YOUR_CLIENT_ID"
+  const APIKey = "API_KEY"
 
   const url = "https://content.googleapis.com/youtube/v3/search"
 
   const [videoDefinition, setVideoDefinition] = React.useState("high")
-  const handleChangeVideoDefinition = (event) => {
+  const handleChangeVideoDefinition = (event: React.ChangeEvent<any>) => {
     setVideoDefinition(event.target.value)
   };
   const [videoDuration, setVideoDuration] = React.useState("any")
-  const handleChangeVideoDuration = (event) => {
+  const handleChangeVideoDuration = (event: React.ChangeEvent<any>) => {
     setVideoDuration(event.target.value)
   };
   const [videoType, setVideoType] = React.useState("any")
-  const handleChangeVideoType = (event) => {
+  const handleChangeVideoType = (event: React.ChangeEvent<any>) => {
     setVideoType(event.target.value)
   };
   const [order, setOrder] = React.useState("viewCount")
-  const handleChangeOrder = (event) => {
+  const handleChangeOrder = (event: React.ChangeEvent<any>) => {
     setOrder(event.target.value)
   };
   const [type, setType] = React.useState("video")
-  const handleChangeType = (event) => {
+  const handleChangeType = (event: React.ChangeEvent<any>) => {
     setType(event.target.value)
   };
   const [query, setQuery] = React.useState("akram")
-  const handleChangeQuery = (event) => {
+  const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value)
   }
   const [publishedBefore, setPublishedBefore] = React.useState("2020-04-22")
-  const handleChangePublishedBefore = (event) => {
+  const handleChangePublishedBefore = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPublishedBefore(event.target.value)
   }
   const [publishedAfter, setPublishedAfter] = React.useState("2018-07-22")
-  const handleChangePublishedAfter = (event) => {
+  const handleChangePublishedAfter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPublishedAfter(event.target.value)
   }
   const [maxResults, setMaxResults] = React.useState(30)
-  const handleChangeMaxResults = (event) => {
-    setMaxResults(event.target.value)
+  const handleChangeMaxResults = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxResults(parseInt(event.target.value))
   }
-  const [items, setItems] = React.useState()
+
+  type Items = any
+  const [items, setItems] = React.useState<Array<Items>>([])
 
 
   const parameters = {
@@ -72,6 +74,8 @@ const YoutubeViewer = () => {
     // "publishedAfter": publishedAfter
   }
 
+  type Parameters = typeof parameters
+
   const orders = ["date", "rating", "viewCount", "relevance", "title", "videoCount"]
   const types = ["video", "playlist", "channel"]
   const videoDefinitions = ["any", "high", "standard"]
@@ -79,10 +83,10 @@ const YoutubeViewer = () => {
   const videoTypes = ["any", "episode", "movie"]
 
 
-  const buildQueryParam = (parameters) => {
+  const buildQueryParam = (parameters: Parameters) => {
     const keys = Object.keys(parameters)
     const params = keys.reduce((acc, key) => {
-      return `${acc}&${key}=${parameters[key]}`
+      return `${acc}&${key}=${parameters[key as keyof Parameters]}`
     }, "")
     return `?key=${APIKey}${params}`
   }
@@ -103,7 +107,7 @@ const YoutubeViewer = () => {
       .then(() => {
         console.log("Sign-in successful")
       },
-        (err) => {
+        (err: string) => {
           console.error("Error signing in", err)
         });
   }
@@ -114,7 +118,7 @@ const YoutubeViewer = () => {
       .then(() => {
         console.log("GAPI client loaded for API")
       },
-        (err) => {
+        (err: string) => {
           console.error("Error loading GAPI client for API", err)
         });
   }
@@ -150,14 +154,16 @@ const YoutubeViewer = () => {
 
   return (
     <div className={classes.root}>
-      <img scr={logo} alt="youtube" />
-      <h1 className={classes.mainTitle}>Recherche Youtube</h1>
+      <div>
+        <img src={logo} alt="youtube" height={30} />
+        <h1 className={classes.mainTitle}>Recherche Youtube</h1>
+      </div>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField label="part" disabled value={"snippet"} className={classes.textField} InputLabelProps={{ classes: { root: classes.labelTextfield } }} />
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel>order</InputLabel>
           <Select value={order} onChange={handleChangeOrder} className={classes.select}>
-            {orders.map(order => <MenuItem value={order}>{order}</MenuItem>)}
+            {orders.map((order, index) => <MenuItem key={index} value={order}>{order}</MenuItem>)}
           </Select>
         </FormControl>
         <TextField required label="query" placeholder="string" value={query} onChange={handleChangeQuery} className={classes.textField} InputLabelProps={{ classes: { root: classes.labelTextfield } }} />
@@ -168,28 +174,28 @@ const YoutubeViewer = () => {
         <TextField label="publishedAfter" type="date" placeholder="1970-01-01T00:00:00Z" value={publishedAfter} onChange={handleChangePublishedAfter}
           className={classes.textField}
           InputLabelProps={{ shrink: true, classes: { root: classes.labelTextfield } }} />
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel>type</InputLabel>
           <Select value={type} onChange={handleChangeType} className={classes.select}>
-            {types.map(type => <MenuItem value={type}>{type}</MenuItem>)}
+            {types.map((type, index) => <MenuItem key={index} value={type}>{type}</MenuItem>)}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel>videoDefinition</InputLabel>
           <Select value={videoDefinition} onChange={handleChangeVideoDefinition} className={classes.select}>
-            {videoDefinitions.map(videoDefinition => <MenuItem value={videoDefinition}>{videoDefinition}</MenuItem>)}
+            {videoDefinitions.map((videoDefinition, index) => <MenuItem key={index} value={videoDefinition}>{videoDefinition}</MenuItem>)}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel>videoType</InputLabel>
           <Select value={videoType} onChange={handleChangeVideoType} className={classes.select}>
-            {videoTypes.map(videoType => <MenuItem value={videoType}>{videoType}</MenuItem>)}
+            {videoTypes.map((videoType, index) => <MenuItem key={index} value={videoType}>{videoType}</MenuItem>)}
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
+        <FormControl>
           <InputLabel>videoDuration</InputLabel>
           <Select value={videoDuration} onChange={handleChangeVideoDuration} className={classes.select}>
-            {videoDurations.map(videoDuration => <MenuItem value={videoDuration}>{videoDuration}</MenuItem>)}
+            {videoDurations.map((videoDuration, index) => <MenuItem key={index} value={videoDuration}>{videoDuration}</MenuItem>)}
           </Select>
         </FormControl>
       </form>
@@ -197,30 +203,32 @@ const YoutubeViewer = () => {
         <Button color="secondary" variant="contained" onClick={authorizeAndLoad}>authorize and load</Button>
         <Button disabled={query.length < 2} color="primary" variant="contained" onClick={execute}>execute</Button>
       </div>
-      {items && items.map(e => {
-        const { channelId, channelTitle, description, publishedAt, thumbnails, title } = e.snippet
-        const url = "https://www.youtube.com/watch?v=" + e.id.videoId
-        const channelUrl = "https://www.youtube.com/channel/" + channelId
-        return (
-          <div className={classes.item}>
-            <div className={classes.content}>
-              <a href={url}><img src={thumbnails.default.url} alt="img" className={classes.img} /></a>
-              <div>
-                <a href={url} className={classes.title}><h3>{title}</h3></a>
-                <Tooltip title={`Go to channel ${channelTitle}`}>
-                  <a href={channelUrl} className={classes.title}>
-                    {channelTitle}
-                  </a>
-                </Tooltip>
-                {publishedAt}
-                <div className={classes.description}>{description}</div>
+      <div className={classes.itemsContainer}>
+        {items && items.map((e, index) => {
+          const { channelId, channelTitle, description, publishedAt, thumbnails, title } = e.snippet
+          const url = "https://www.youtube.com/watch?v=" + e.id.videoId
+          const channelUrl = "https://www.youtube.com/channel/" + channelId
+          return (
+            <div className={classes.item} key={index}>
+              <div className={classes.content}>
+                <a href={url}><img src={thumbnails.default.url} alt="img" className={classes.img} /></a>
+                <div>
+                  <a href={url} className={classes.title}><h3>{title}</h3></a>
+                  <Tooltip title={`Go to channel ${channelTitle}`}>
+                    <a href={channelUrl} className={classes.title}>
+                      {channelTitle}
+                    </a>
+                  </Tooltip>
+                  {publishedAt}
+                  <div className={classes.description}>{description}</div>
+                </div>
               </div>
+              <Divider className={classes.divider} />
             </div>
-            <Divider className={classes.divider} />
-          </div>
-        )
-      })}
-    </div>
+          )
+        })}
+      </div>
+    </div >
   );
 }
 

@@ -1,24 +1,33 @@
 
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
-export const useStyles = makeStyles(theme => {
+export const useStyles = makeStyles((theme: Theme) => {
 
     return createStyles({
         root: {
-            padding: theme.spacing(1),
+            padding: theme.spacing(2),
+            height: "100%",
+            boxSizing: "border-box"
             // background: "#181818",
             // color: "white"
         },
         mainTitle: {
-            color: "#f00"
+            color: "#f00",
+            display: "inline",
+            marginLeft: theme.spacing(1)
         },
         labelTextfield: {
             // color: "white"
         },
         form: {
+            display: "flex",
+            flexWrap: "wrap",
+            width: "50%",
+            marginBottom: 20,
             '& > *': {
-                margin: theme.spacing(1),
-                display: 'block'
+                margin: theme.spacing(2),
+                display: 'block',
+                width: 200
             }
         },
         buttons: {
@@ -27,11 +36,8 @@ export const useStyles = makeStyles(theme => {
                 display: 'block'
             }
         },
-        formControl: {
-            margin: theme.spacing(1)
-        },
         select: {
-            minWidth: 120
+            width: "100%"
         },
         content: {
             display: "flex",
@@ -54,7 +60,15 @@ export const useStyles = makeStyles(theme => {
             marginRight: theme.spacing(1)
         },
         description: {
+            fontSize: "90%",
+            fontStyle: "italic"
+        },
+        textField: {
 
+        },
+        itemsContainer: {
+            overflow: "auto",
+            height: "calc(100% - 400px)"
         }
     })
 })
