@@ -6,36 +6,35 @@ import {
 import { useStyles } from "./index_style"
 import { gapi } from 'gapi-script'
 import logo from "./ressources/icone_yt.png"
+import { Parameter, Order, Type, VideoDefinition, VideoDuration, VideoType, Items } from "./types"
 
 
-const YoutubeViewer = () => {
+const YoutubeViewer: React.FunctionComponent = () => {
 
   const classes = useStyles()
 
-  // const client_id = "YOUR_CLIENT_ID"
+  const client_id = "YOUR_CLIENT_ID"
   const APIKey = "API_KEY"
 
-  const url = "https://content.googleapis.com/youtube/v3/search"
-
-  const [videoDefinition, setVideoDefinition] = React.useState("high")
-  const handleChangeVideoDefinition = (event: React.ChangeEvent<any>) => {
-    setVideoDefinition(event.target.value)
+  const [videoDefinition, setVideoDefinition] = React.useState<VideoDefinition>("any")
+  const handleChangeVideoDefinition = (event: React.ChangeEvent<{ value: string | unknown }>) => {
+    setVideoDefinition(event.target.value as VideoDefinition)
   };
-  const [videoDuration, setVideoDuration] = React.useState("any")
-  const handleChangeVideoDuration = (event: React.ChangeEvent<any>) => {
-    setVideoDuration(event.target.value)
+  const [videoDuration, setVideoDuration] = React.useState<VideoDuration>("any")
+  const handleChangeVideoDuration = (event: React.ChangeEvent<{ value: string | unknown }>) => {
+    setVideoDuration(event.target.value as VideoDuration)
   };
-  const [videoType, setVideoType] = React.useState("any")
-  const handleChangeVideoType = (event: React.ChangeEvent<any>) => {
-    setVideoType(event.target.value)
+  const [videoType, setVideoType] = React.useState<VideoType>("any")
+  const handleChangeVideoType = (event: React.ChangeEvent<{ value: string | unknown }>) => {
+    setVideoType(event.target.value as VideoType)
   };
-  const [order, setOrder] = React.useState("viewCount")
-  const handleChangeOrder = (event: React.ChangeEvent<any>) => {
-    setOrder(event.target.value)
+  const [order, setOrder] = React.useState<Order>("viewCount")
+  const handleChangeOrder = (event: React.ChangeEvent<{ value: string | unknown }>) => {
+    setOrder(event.target.value as Order)
   };
-  const [type, setType] = React.useState("video")
-  const handleChangeType = (event: React.ChangeEvent<any>) => {
-    setType(event.target.value)
+  const [type, setType] = React.useState<Type>("video")
+  const handleChangeType = (event: React.ChangeEvent<{ value: string | unknown }>) => {
+    setType(event.target.value as Type)
   };
   const [query, setQuery] = React.useState("akram")
   const handleChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,12 +53,12 @@ const YoutubeViewer = () => {
     setMaxResults(parseInt(event.target.value))
   }
 
-  type Items = any
   const [items, setItems] = React.useState<Array<Items>>([])
 
 
-  const parameters = {
+  const parameters: Parameter = {
     "part": "snippet",
+    "q": query,
     "order": order,
     "type": type,
     "videoDefinition": videoDefinition,
@@ -74,30 +73,29 @@ const YoutubeViewer = () => {
     // "publishedAfter": publishedAfter
   }
 
-  type Parameters = typeof parameters
-
-  const orders = ["date", "rating", "viewCount", "relevance", "title", "videoCount"]
-  const types = ["video", "playlist", "channel"]
-  const videoDefinitions = ["any", "high", "standard"]
-  const videoDurations = ["any", "long", "medium", "short"]
-  const videoTypes = ["any", "episode", "movie"]
+  const orders: Order[] = ["date", "rating", "viewCount", "relevance", "title", "videoCount"]
+  const types: Type[] = ["video", "playlist", "channel"]
+  const videoDefinitions: VideoDefinition[] = ["any", "high", "standard"]
+  const videoDurations: VideoDuration[] = ["any", "long", "medium", "short"]
+  const videoTypes: VideoType[] = ["any", "episode", "movie"]
 
 
-  const buildQueryParam = (parameters: Parameters) => {
+  const buildQueryParam = (parameters: Parameter) => {
     const keys = Object.keys(parameters)
     const params = keys.reduce((acc, key) => {
-      return `${acc}&${key}=${parameters[key as keyof Parameters]}`
+      return `${acc}&${key}=${parameters[key as keyof Parameter]}`
     }, "")
     return `?key=${APIKey}${params}`
   }
 
+  const url = "https://content.googleapis.com/youtube/v3/search"
   const queryParam = buildQueryParam(parameters)
 
-  // React.useEffect(() => {
-  //   gapi.load("client:auth2", () => {
-  //     gapi.auth2.init({ client_id });
-  //   });
-  // }, [])
+  React.useEffect(() => {
+    gapi.load("client:auth2", () => {
+      gapi.auth2.init({ client_id });
+    });
+  }, [])
 
 
   const authenticate = () => {
@@ -139,12 +137,16 @@ const YoutubeViewer = () => {
     //   console.log(res)
     // })
     // return gapi.client.youtube.search.list(parameters)
-    //   .then((response) => {
+    //   .then((response: any) => {
     //     // Handle the results here (response.result has the parsed body).
     //     console.log("Response", response);
+    //       return response.result
     //   },
-    //     (err) => {
+    //     (err: string) => {
     //       console.error("Execute error", err)
+    //     })
+    //     .then((data: any) => {
+    //       return setItems(data.items)
     //     });
   }
 
@@ -154,9 +156,9 @@ const YoutubeViewer = () => {
 
   return (
     <div className={classes.root}>
-      <div>
+      <div className={classes.mainTitle}>
         <img src={logo} alt="youtube" height={30} />
-        <h1 className={classes.mainTitle}>Recherche Youtube</h1>
+        <h1 className={classes.h1}>Recherche Youtube</h1>
       </div>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField label="part" disabled value={"snippet"} className={classes.textField} InputLabelProps={{ classes: { root: classes.labelTextfield } }} />

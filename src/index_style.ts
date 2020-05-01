@@ -11,13 +11,19 @@ export const useStyles = makeStyles((theme: Theme) => {
             // background: "#181818",
             // color: "white"
         },
-        mainTitle: {
+        h1: {
             color: "#f00",
-            display: "inline",
             marginLeft: theme.spacing(1)
+        },
+        mainTitle: {
+            display: "flex",
+            alignItems: "center"
         },
         labelTextfield: {
             // color: "white"
+        },
+        textField: {
+
         },
         form: {
             display: "flex",
@@ -62,9 +68,6 @@ export const useStyles = makeStyles((theme: Theme) => {
         description: {
             fontSize: "90%",
             fontStyle: "italic"
-        },
-        textField: {
-
         },
         itemsContainer: {
             overflow: "auto",
