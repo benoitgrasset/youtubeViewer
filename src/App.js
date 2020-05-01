@@ -13,8 +13,7 @@ const YoutubeViewer = () => {
   const classes = useStyles()
 
   const client_id = "YOUR_CLIENT_ID"
-  const APIKey = "AIzaSyA9ncMmFPeLKfUR4X7vXItUOW47AEIYOas"
-  // const APIKey2 = "AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM"
+  const APIKey = "API_key"
 
   const url = "https://content.googleapis.com/youtube/v3/search"
 
@@ -214,7 +213,7 @@ const YoutubeViewer = () => {
                   </a>
                 </Tooltip>
                 {publishedAt}
-                <div>{description}</div>
+                <div className={classes.description}>{description}</div>
               </div>
             </div>
             <Divider className={classes.divider} />

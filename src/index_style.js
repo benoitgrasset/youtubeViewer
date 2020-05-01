@@ -52,6 +52,9 @@ export const useStyles = makeStyles(theme => {
         },
         img: {
             marginRight: theme.spacing(1)
+        },
+        description: {
+
         }
     })
 })
