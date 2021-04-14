@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/youtube-viewer/static/css/main.9b905e78.chunk.css",
+    "main.js": "/youtube-viewer/static/js/main.ac99b952.chunk.js",
+    "main.js.map": "/youtube-viewer/static/js/main.ac99b952.chunk.js.map",
+    "runtime-main.js": "/youtube-viewer/static/js/runtime-main.fadc71aa.js",
+    "runtime-main.js.map": "/youtube-viewer/static/js/runtime-main.fadc71aa.js.map",
+    "static/js/2.adc37937.chunk.js": "/youtube-viewer/static/js/2.adc37937.chunk.js",
+    "static/js/2.adc37937.chunk.js.map": "/youtube-viewer/static/js/2.adc37937.chunk.js.map",
+    "index.html": "/youtube-viewer/index.html",
+    "precache-manifest.614eb4eac8fa4936a5262f521aac63a4.js": "/youtube-viewer/precache-manifest.614eb4eac8fa4936a5262f521aac63a4.js",
+    "service-worker.js": "/youtube-viewer/service-worker.js",
+    "static/css/main.9b905e78.chunk.css.map": "/youtube-viewer/static/css/main.9b905e78.chunk.css.map",
+    "static/js/2.adc37937.chunk.js.LICENSE.txt": "/youtube-viewer/static/js/2.adc37937.chunk.js.LICENSE.txt",
+    "static/media/icone_yt.png": "/youtube-viewer/static/media/icone_yt.f95e2f43.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.fadc71aa.js",
+    "static/js/2.adc37937.chunk.js",
+    "static/css/main.9b905e78.chunk.css",
+    "static/js/main.ac99b952.chunk.js"
+  ]
+}
