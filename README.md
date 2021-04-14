@@ -1,3 +1,5 @@
+This application has been deployed here: https://benoitgrasset.github.io/youtube-viewer/
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
